@@ -1,0 +1,18 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>CertFormController</servlet-name>
+  	<display-name>CertFormController</display-name>
+  	<description></description>
+  	<servlet-class>org.cert.parse.controller.CertFormController</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>CertFormController</servlet-name>
+  	<url-pattern>/CertFormController</url-pattern>
+  </servlet-mapping>
+</web-app>

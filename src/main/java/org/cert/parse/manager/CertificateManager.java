@@ -3,7 +3,6 @@ package org.cert.parse.manager;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
@@ -15,31 +14,37 @@ import org.cert.parse.model.CertBean;
 import org.cert.parse.util.PropertyManagerUtil;
 
 public class CertificateManager {
+	
 	private CertBean cBean = null;
 
-	public CertificateFactory createCertIns() throws Exception {
-
-		CertificateFactory cf = CertificateFactory.getInstance("X.509");
-		 cBean = new CertBean();
-		System.out.println("Type = " + cf.getType());
-		System.out.println("Provider = " + cf.getProvider());
-		System.out.println("toString = " + cf.toString());
-		return cf;
-
-	}
-
-	public X509Certificate generateCertificate(CertificateFactory cf)
+	public CertBean generateCertificate()
 			throws FileNotFoundException, CertificateException, IOException {
-	  	 
+		cBean = new CertBean();
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		String fileName = PropertyManagerUtil.readCertFile();
 		FileInputStream fis = new FileInputStream(fileName);
 		X509Certificate cert = (X509Certificate)cf.generateCertificate(fis);
 		fis.close();
-		
+
+		cBean.setIssuer(cert.getIssuerDN().getName());
+		cBean.setSubject(cert.getSubjectDN().getName());
+		cBean.setSerialNumber(cert.getSerialNumber().toString());
+		boolean flag = checkValidaity(cert);
+		if(flag == true){
+			cBean.setValid(true);
+			cBean.setFromDate(cert.getNotBefore().toString());
+			cBean.setToDate(cert.getNotAfter().toString());
+		}
+
+		return cBean;
+	}
+
+	private boolean checkValidaity(X509Certificate cert) {
+		boolean flag = false;
 		Date date = new Date();
 		try{
-			System.out.println("Checking the certificate validity");
 			cert.checkValidity(date);
+			flag = true;
 		}
 		catch( CertificateExpiredException e){
 			e.printStackTrace();
@@ -47,17 +52,14 @@ public class CertificateManager {
 		catch(CertificateNotYetValidException ee){
 		ee.printStackTrace();
 		}
+		return flag;
+	}
 
-		System.out.println("Certificate Object Info: ");
-		System.out.println("Type = " + cert.getType());
-		System.out.println("toString = " + cert.toString());
+	public CertBean getcBean() {
+		return cBean;
+	}
 
-		PublicKey pubKey = cert.getPublicKey();
-		System.out.println();
-		System.out.println("PublicKey Object Info: ");
-		System.out.println("Algorithm = " + pubKey.getAlgorithm());
-		System.out.println("Format = " + pubKey.getFormat());
-		System.out.println("toString = " + pubKey.toString());
-		return cert;
+	public void setcBean(CertBean cBean) {
+		this.cBean = cBean;
 	}
 }

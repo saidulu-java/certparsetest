@@ -1,6 +1,15 @@
 package org.cert.parse.model;
 
 public class CertBean {
+	
+	private String issuer;
+	private String subject;
+	private String serialNumber;
+	private String fromDate;
+	private String toDate;
+	private boolean isValid;
+	
+	
 	public String getIssuer() {
 		return issuer;
 	}
@@ -31,17 +40,12 @@ public class CertBean {
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
 	}
-	public String getSigValidity() {
-		return sigValidity;
+	
+	public boolean isValid() {
+		return isValid;
 	}
-	public void setSigValidity(String sigValidity) {
-		this.sigValidity = sigValidity;
+	public void setValid(boolean isValid) {
+		this.isValid = isValid;
 	}
-	private String issuer;
-	private String subject;
-	private String serialNumber;
-	private String fromDate;
-	private String toDate;
-	private String sigValidity;
 
 }
